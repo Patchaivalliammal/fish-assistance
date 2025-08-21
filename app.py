@@ -1,9 +1,9 @@
-import io
 import json
 import numpy as np
 from PIL import Image
 import streamlit as st
 import tensorflow as tf
+
 
 # Paths
 MODEL_PATH = 'models/fish_classifier.h5'
@@ -12,7 +12,7 @@ KB_PATH = 'kb/fish_knowledge.json'
 IMG_SIZE = (224, 224)
 
 
-# Load the model
+# Load Model
 @st.cache_resource
 def load_model():
     try:
@@ -23,7 +23,7 @@ def load_model():
         return None
 
 
-# Load labels
+# Load Labels
 @st.cache_resource
 def load_labels():
     try:
@@ -34,7 +34,7 @@ def load_labels():
         return []
 
 
-# Load knowledge base
+# Load Knowledge Base
 @st.cache_resource
 def load_kb():
     try:
@@ -49,15 +49,14 @@ model = load_model()
 labels = load_labels()
 kb = load_kb()
 
-# Streamlit UI
 st.set_page_config(page_title='Smart Fish Assistant', page_icon='🐟')
 st.title('🐟 Smart Fish Assistant')
 st.caption('Identify fish ➜ Clean it right ➜ Cook something delicious')
 
+
 # File uploader
 uploaded = st.file_uploader('Upload a fish image', type=['jpg', 'jpeg', 'png'])
 
-# Settings
 col1, col2 = st.columns(2)
 with col1:
     conf_threshold = st.slider('Confidence threshold', 0.0, 1.0, 0.4, 0.01)
@@ -65,38 +64,42 @@ with col2:
     topk = st.selectbox('Show top-K predictions', options=[1, 2, 3], index=2)
 
 
-# Prediction
 if uploaded is not None:
     img = Image.open(uploaded).convert('RGB')
     st.image(img, caption='Uploaded image', use_container_width=True)
 
-    if model is None or not labels:
-        st.error("Model or labels not available.")
-    else:
+    if model is not None and labels:
         # Preprocess
         img_resized = img.resize(IMG_SIZE)
-        arr = np.array(img_resized) / 255.0
-        arr = np.expand_dims(arr, axis=0)
+        x = np.array(img_resized) / 255.0
+        x = np.expand_dims(x, axis=0)
 
         # Predict
-        preds = model.predict(arr)[0]
+        preds = model.predict(x)[0]
         top_indices = preds.argsort()[-topk:][::-1]
 
-        st.subheader("Predictions:")
+        st.subheader("Predictions")
         for idx in top_indices:
-            label = labels[idx] if idx < len(labels) else "Unknown"
             conf = preds[idx]
-            if conf >= conf_threshold:
-                st.write(f"✅ {label} ({conf:.2f})")
+            if conf < conf_threshold:
+                continue
+            fish_name = labels[idx]
+            st.write(f"**{fish_name}** ({conf:.2f} confidence)")
 
-                # Show knowledge base info
-                if label in kb:
-                    st.info(f"**Cleaning tip:** {kb[label].get('cleaning', 'No info')}")
-                    st.success(f"**Recipe idea:** {kb[label].get('recipe', 'No info')}")
+            # Fetch KB info safely
+            fish_info = kb.get(fish_name, {})
+            cleaning = fish_info.get("cleaning", "No cleaning info available for this fish.")
+            recipe = fish_info.get("recipe", "No recipe info available for this fish.")
 
-img = Image.open(uploaded).convert('RGB')
-st.image(img, caption='Uploaded image', use_container_width=True)
+            with st.expander(f"ℹ️ Info about {fish_name}"):
+                st.write(f"🧽 **Cleaning tip:** {cleaning}")
+                st.write(f"🍲 **Recipe idea:** {recipe}")
+
+    else:
+        st.warning("⚠️ Model or labels not loaded correctly. Please check your files.")
+
 
 
 
 if model is None or not labels:
+
