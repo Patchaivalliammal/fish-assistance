@@ -1,0 +1,59 @@
+{
+"Sardine": {
+"cleaning": [
+"Rinse; descale lightly",
+"Pinch belly open; remove guts",
+"Optional: remove head and larger bones"
+],
+"recipes": [
+{
+"name": "Sardine Fry",
+"summary": "Crispy coastal style",
+"steps": ["Marinate", "Coat lightly with rice flour", "Fry until crisp"]
+},
+{
+"name": "Sardine Curry",
+"summary": "Tamarind-based curry",
+"steps": ["Sauté onions", "Add spices + tamarind", "Simmer sardines 8–10 min"]
+}
+]
+},
+"Rohu": {
+"cleaning": [
+"Descale thoroughly (heavy scales)",
+"Slit belly; remove guts; rinse",
+"Cut into steaks; remove fine rib bones"
+],
+"recipes": [
+{
+"name": "Rohu Curry (Rui Maacher Jhol)",
+"summary": "Light Bengali curry",
+"steps": ["Marinate with turmeric + salt", "Shallow-fry pieces", "Simmer in cumin-coriander broth with potatoes"]
+},
+{
+"name": "Mustard Rohu",
+"summary": "Sharp mustard gravy",
+"steps": ["Blend mustard + green chilies", "Sauté paste", "Simmer fish until cooked"]
+}
+]
+},
+"Pomfret": {
+"cleaning": [
+"Thin scales: scrape lightly",
+"Slit belly; remove guts; rinse",
+"Score sides for better marination"
+],
+"recipes": [
+{
+"name": "Tandoori Pomfret",
+"summary": "Yogurt-spice marinade",
+"steps": ["Marinate 30–60 min", "Grill/air-fry until done"]
+},
+{
+"name": "Goan Pomfret Curry",
+"summary": "Coconut + kokum",
+"steps": ["Grind coconut masala", "Simmer fish gently 8–10 min"]
+}
+]
+}
+}
